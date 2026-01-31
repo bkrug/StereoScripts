@@ -33,10 +33,23 @@
 			; set image to ratio of a 4x6 photograph
 			(let* 
 				(
-					(heightWithBorder (/ contentHeight (- 1 (/ borderSize (/ HEIGHT_INCHES 2)))))
-					(widthWithBorder (/ contentWidth (- 1 (/ borderSize (/ WIDTH_INCHES 2)))))
-					(printedHeight (if (> (/ 4 6) (/ contentHeight contentWidth)) (* (/ 4 6) widthWithBorder) heightWithBorder ) )
-					(printedWidth (if (> (/ 4 6) (/ contentHeight contentWidth)) widthWithBorder (* (/ 6 4) heightWithBorder) ) )
+					; height and width in pixels before they are increased to match the desired aspect ratio
+					(heightWithBorder (/ contentHeight (- 1 (/ (* 2 borderSize) HEIGHT_INCHES ))))
+					(widthWithBorder (/ contentWidth (- 1 (/ (* 2 borderSize) WIDTH_INCHES ))))
+					; height and width in pixels after increasing them to match the desired aspect ratio
+					(printedHeight
+						(if (> (/ HEIGHT_INCHES WIDTH_INCHES) (/ contentHeight contentWidth))
+							(* (/ HEIGHT_INCHES WIDTH_INCHES) widthWithBorder)
+							heightWithBorder 
+						)
+					)
+					(printedWidth
+						(if (> (/ HEIGHT_INCHES WIDTH_INCHES) (/ contentHeight contentWidth))
+							widthWithBorder
+							(* (/ WIDTH_INCHES HEIGHT_INCHES) heightWithBorder)
+						)
+					)
+					; offsets to move the content to
 					(contentTopOffset (/ (- printedHeight contentHeight) 2))
 					(contentLeftOffset (/ (- printedWidth contentWidth) 2))
 					(blankLyr (car (gimp-layer-new img "Background" printedWidth printedHeight 0 100 0)))
