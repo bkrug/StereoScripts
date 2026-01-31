@@ -1,7 +1,7 @@
 (define (unstack-image img
-					  lyr
-					  backColor
-					  borderSize)
+					   lyr
+					   backColor
+					   borderSize)
    (let*
    		(
 			(origHeight (car (gimp-image-get-height img)))
@@ -41,14 +41,8 @@
 					(contentLeftOffset (/ (- printedWidth contentWidth) 2))
 					(blankLyr (car (gimp-layer-new img "Background" printedWidth printedHeight 0 100 0)))
 				)
-				(display widthWithBorder)
-				(display #\newline)
-				(display printedWidth)
-				(display #\newline)
-				(display contentLeftOffset)
-				(display #\newline)
 				(gimp-image-resize img printedWidth printedHeight 0 0)
-				; move layer to center
+				; center the content layer vertically and horizontally
 				(gimp-layer-set-offsets lyrMerge contentLeftOffset contentTopOffset)
 				; color background image
 				(gimp-context-set-background backColor)

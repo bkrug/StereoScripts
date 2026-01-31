@@ -1,10 +1,10 @@
-(define (stack-images fnm-L
-                      fnm-R)
+(define (stack-images fnmL
+                      fnmR)
    (let* 
       (
-         (img (car (gimp-file-load RUN-NONINTERACTIVE fnm-L fnm-L)))
-         (layL (car (gimp-image-get-layers img)))
-         (layR (car (gimp-file-load-layer RUN-NONINTERACTIVE img fnm-R)))
+         (img (car (gimp-file-load RUN-NONINTERACTIVE fnmL fnmL)))
+         (lyrL (car (gimp-image-get-layers img)))
+         (lyrR (car (gimp-file-load-layer RUN-NONINTERACTIVE img fnmR)))
          (origHeight (car (gimp-image-get-height img)))
          (origWidth (car (gimp-image-get-width img)))
          (newHeight (* 2 origHeight))
@@ -12,9 +12,9 @@
 	   ; double image height
 	   (gimp-image-resize img origWidth newHeight 0 0)
       ; insert the right-eye layer
-      (gimp-image-insert-layer img layR 0 0)
+      (gimp-image-insert-layer img lyrR 0 0)
 	   ; move right layer vertically down
-	   (gimp-layer-set-offsets layR 0 origHeight)
+	   (gimp-layer-set-offsets lyrR 0 origHeight)
 	   ; merge layers
 	   (let*
          (
@@ -38,8 +38,8 @@
                     "Benjamin Krug"
          			  "2026-01-26"
                     ""
-                    SF-FILENAME "fnm-L" ""
-                    SF-FILENAME "fnm-R" ""
+                    SF-FILENAME "fnmL" ""
+                    SF-FILENAME "fnmR" ""
 )
 
 (script-fu-menu-register "stack-images"
