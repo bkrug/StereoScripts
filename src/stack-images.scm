@@ -36,7 +36,7 @@
                     "Stack one image at the top top half and one at the bottom half of the new image."
                     ""
                     "Benjamin Krug"
-         			  "2026-01-26"
+         			  "2026-01-31"
                     ""
                     SF-FILENAME "fnmL" ""
                     SF-FILENAME "fnmR" ""

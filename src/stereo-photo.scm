@@ -87,7 +87,7 @@
 					"Splits image into top and bottom halves, converting into left and right halves, and fits them onto into an image for printing a 4x6 photograph."
 					""
 					"Benjamin Krug"
-					"2026-01-26"
+					"2026-01-31"
 					""
 					SF-IMAGE      "The image"				0
 					SF-DRAWABLE   "The layer"				0
