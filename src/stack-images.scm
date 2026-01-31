@@ -8,7 +8,6 @@
          (origHeight (car (gimp-image-get-height img)))
          (origWidth (car (gimp-image-get-width img)))
          (newHeight (* 2 origHeight))
-         (CLIP_TO_IMAGE 1)
       )
 	   ; double image height
 	   (gimp-image-resize img origWidth newHeight 0 0)
@@ -19,7 +18,7 @@
 	   ; merge layers
 	   (let*
          (
-            (layMerge (car (gimp-image-merge-visible-layers img CLIP_TO_IMAGE) ) )
+            (layMerge (car (gimp-image-merge-visible-layers img CLIP-TO-IMAGE) ) )
          )
          ; display the image
          (gimp-display-new img)

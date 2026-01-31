@@ -8,8 +8,6 @@
 			(origWidth (car (gimp-image-get-width img)))
 			(newHeight (/ origHeight 2))
 			(newWidth (* 2 origWidth))
-			(CLIP_TO_IMAGE 1)
-			(FG_BUCKET_FILL 0)
 			(BACKGROUND_FILL 1)
 			(HEIGHT_INCHES 4)
 			(WIDTH_INCHES 6)
@@ -28,7 +26,7 @@
 		(let*
 			(
 				; merge layers
-				(lyr-merge (car (gimp-image-merge-visible-layers img CLIP_TO_IMAGE)))
+				(lyr-merge (car (gimp-image-merge-visible-layers img CLIP-TO-IMAGE)))
 			)
 			; halve image height
 			(gimp-image-resize img newWidth newHeight 0 0)
@@ -49,11 +47,11 @@
 				(gimp-layer-set-offsets lyr-merge centerWidth centerHeight)
 				; color background image
 				(gimp-context-set-background backColor)
-				(gimp-drawable-fill blankLyr BACKGROUND_FILL)
+				(gimp-drawable-fill blankLyr FILL-BACKGROUND)
 				; insert layer behind
 				(gimp-image-insert-layer img blankLyr 0 1)
 				; merge layers
-				(gimp-image-merge-visible-layers img CLIP_TO_IMAGE)
+				(gimp-image-merge-visible-layers img CLIP-TO-IMAGE)
 				; the end
 				(gimp-displays-flush)
 			)
