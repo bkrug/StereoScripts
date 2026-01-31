@@ -7,7 +7,7 @@
             (img-stack (vector-ref stack-result 0) )
             (lyr-stack (vector-ref stack-result 1) )
         )
-        (stereo-photo img-stack lyr-stack "gray" 0.0625 )
+        (unstack-image img-stack lyr-stack "gray" 0.0625 )
     )
 )
 

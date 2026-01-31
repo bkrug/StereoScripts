@@ -1,4 +1,4 @@
-(define (stereo-photo img
+(define (unstack-image img
 					  lyr
 					  backColor
 					  borderSize)
@@ -38,51 +38,35 @@
 				(
 					(heightWithBorder (/ newHeight (- 1 (/ borderSize (/ HEIGHT_INCHES 2)))))
 					(widthWithBorder (/ newWidth (- 1 (/ borderSize (/ WIDTH_INCHES 2)))))
+					(photoHeight (if (> (/ 4 6) (/ newHeight newWidth)) (* (/ 4 6) widthWithBorder) heightWithBorder ) )
+					(photoWidth (if (> (/ 4 6) (/ newHeight newWidth)) widthWithBorder (* (/ 6 4) heightWithBorder) ) )
+					(centerHeight (/ (- photoHeight newHeight) 2))
+					(centerWidth (/ (- photoWidth newWidth) 2))
+					(blankLyr (car (gimp-layer-new img "Background" photoWidth photoHeight 0 100 0)))
 				)
-				(let*
-					(
-						(photoHeight (if (> (/ 4 6) (/ newHeight newWidth)) (* (/ 4 6) widthWithBorder) heightWithBorder ) )
-						(photoWidth (if (> (/ 4 6) (/ newHeight newWidth)) widthWithBorder (* (/ 6 4) heightWithBorder) ) )
-					)
-					(let*
-						(
-							(centerHeight (/ (- photoHeight newHeight) 2))
-							(centerWidth (/ (- photoWidth newWidth) 2))
-							;(lyr (car (gimp-image-get-layers img)))
-							(blankLyr (car (gimp-layer-new img "Background" photoWidth photoHeight 0 100 0)))
-						)
-						(gimp-image-resize img photoWidth photoHeight 0 0)
-						;
-						(display lyr-merge)
-						(display #\newline)
-						(display centerWidth)
-						(display #\newline)
-						(display centerHeight)
-						(display #\newline)
-						; move layer to center
-						(gimp-layer-set-offsets lyr-merge centerWidth centerHeight)
-						; color background image
-						(gimp-context-set-background backColor)
-						(gimp-drawable-fill blankLyr BACKGROUND_FILL)
-						; insert layer behind
-						(gimp-image-insert-layer img blankLyr 0 1)
-						; merge layers
-						(gimp-image-merge-visible-layers img CLIP_TO_IMAGE)
-						; the end
-						(gimp-displays-flush)
-					)
-				)
+				(gimp-image-resize img photoWidth photoHeight 0 0)
+				; move layer to center
+				(gimp-layer-set-offsets lyr-merge centerWidth centerHeight)
+				; color background image
+				(gimp-context-set-background backColor)
+				(gimp-drawable-fill blankLyr BACKGROUND_FILL)
+				; insert layer behind
+				(gimp-image-insert-layer img blankLyr 0 1)
+				; merge layers
+				(gimp-image-merge-visible-layers img CLIP_TO_IMAGE)
+				; the end
+				(gimp-displays-flush)
 			)
 		)
 	)
 )
 
-(script-fu-register "stereo-photo"
-					"Stereo Photo"
-					"Splits and image in half vertically, aligns the halves horizontally, and fits them onto into an image for printing a photograph."
+(script-fu-register "unstack-image"
+					"Unstack for Stereoscope"
+					"Splits image into top and bottom halves, converting into left and right halves, and fits them onto into an image for printing a 4x6 photograph."
 					""
 					"Benjamin Krug"
-					"2014-10-04"
+					"2026-01-26"
 					""
 					SF-IMAGE      "The image"				0
 					SF-DRAWABLE   "The layer"				0
@@ -90,5 +74,5 @@
 					SF-ADJUSTMENT _"Border Size in Inches"  '(0.0625 0 3 0.0625 5 4 0)
 )
 
-(script-fu-menu-register "stereo-photo"
+(script-fu-menu-register "unstack-image"
                          "<Image>/Stereo")
