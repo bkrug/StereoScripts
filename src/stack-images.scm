@@ -26,7 +26,7 @@
          ; the end
          (gimp-displays-flush)
          ; return
-         '(img layMerge)         
+         (vector img layMerge)         
       )
    )
 )
