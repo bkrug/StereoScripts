@@ -6,45 +6,50 @@
    		(
 			(origHeight (car (gimp-image-get-height img)))
 			(origWidth (car (gimp-image-get-width img)))
-			(newHeight (/ origHeight 2))
-			(newWidth (* 2 origWidth))
-			(BACKGROUND_FILL 1)
+			(contentHeight (/ origHeight 2))
+			(contentWidth (* 2 origWidth))
 			(HEIGHT_INCHES 4)
 			(WIDTH_INCHES 6)
 		)
 		; double image width
-		(gimp-image-resize img newWidth origHeight 0 0)
+		(gimp-image-resize img contentWidth origHeight 0 0)
 		(gimp-layer-resize-to-image-size lyr)
 		; select bottom half of image
-		(gimp-image-select-rectangle img CHANNEL-OP-ADD 0 newHeight origWidth newHeight)
+		(gimp-image-select-rectangle img CHANNEL-OP-ADD 0 contentHeight origWidth contentHeight)
 		; cut bottom half of image
 		(gimp-edit-cut (vector lyr) )
 		; select top right quarter of new image size
-		(gimp-image-select-rectangle img CHANNEL-OP-REPLACE origWidth 0 origWidth newHeight)
+		(gimp-image-select-rectangle img CHANNEL-OP-REPLACE origWidth 0 origWidth contentHeight)
 		; paste bottom half on the right
 		(gimp-edit-paste lyr)
 		(let*
 			(
 				; merge layers
-				(lyr-merge (car (gimp-image-merge-visible-layers img CLIP-TO-IMAGE)))
+				(lyrMerge (car (gimp-image-merge-visible-layers img CLIP-TO-IMAGE)))
 			)
 			; halve image height
-			(gimp-image-resize img newWidth newHeight 0 0)
-			(gimp-layer-resize-to-image-size lyr-merge)
+			(gimp-image-resize img contentWidth contentHeight 0 0)
+			(gimp-layer-resize-to-image-size lyrMerge)
 			; set image to ratio of a 4x6 photograph
 			(let* 
 				(
-					(heightWithBorder (/ newHeight (- 1 (/ borderSize (/ HEIGHT_INCHES 2)))))
-					(widthWithBorder (/ newWidth (- 1 (/ borderSize (/ WIDTH_INCHES 2)))))
-					(photoHeight (if (> (/ 4 6) (/ newHeight newWidth)) (* (/ 4 6) widthWithBorder) heightWithBorder ) )
-					(photoWidth (if (> (/ 4 6) (/ newHeight newWidth)) widthWithBorder (* (/ 6 4) heightWithBorder) ) )
-					(centerHeight (/ (- photoHeight newHeight) 2))
-					(centerWidth (/ (- photoWidth newWidth) 2))
-					(blankLyr (car (gimp-layer-new img "Background" photoWidth photoHeight 0 100 0)))
+					(heightWithBorder (/ contentHeight (- 1 (/ borderSize (/ HEIGHT_INCHES 2)))))
+					(widthWithBorder (/ contentWidth (- 1 (/ borderSize (/ WIDTH_INCHES 2)))))
+					(printedHeight (if (> (/ 4 6) (/ contentHeight contentWidth)) (* (/ 4 6) widthWithBorder) heightWithBorder ) )
+					(printedWidth (if (> (/ 4 6) (/ contentHeight contentWidth)) widthWithBorder (* (/ 6 4) heightWithBorder) ) )
+					(contentTopOffset (/ (- printedHeight contentHeight) 2))
+					(contentLeftOffset (/ (- printedWidth contentWidth) 2))
+					(blankLyr (car (gimp-layer-new img "Background" printedWidth printedHeight 0 100 0)))
 				)
-				(gimp-image-resize img photoWidth photoHeight 0 0)
+				(display widthWithBorder)
+				(display #\newline)
+				(display printedWidth)
+				(display #\newline)
+				(display contentLeftOffset)
+				(display #\newline)
+				(gimp-image-resize img printedWidth printedHeight 0 0)
 				; move layer to center
-				(gimp-layer-set-offsets lyr-merge centerWidth centerHeight)
+				(gimp-layer-set-offsets lyrMerge contentLeftOffset contentTopOffset)
 				; color background image
 				(gimp-context-set-background backColor)
 				(gimp-drawable-fill blankLyr FILL-BACKGROUND)

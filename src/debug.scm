@@ -10,13 +10,3 @@
         (unstack-image img-stack lyr-stack "gray" 0.0625 )
     )
 )
-
-(define (calc-something)
-    (let*
-        (
-            (a 4)
-            (b 5)
-        )
-        (* a b)
-    )
-)
