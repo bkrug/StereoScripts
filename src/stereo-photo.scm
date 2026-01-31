@@ -25,47 +25,55 @@
 		(gimp-image-select-rectangle img CHANNEL-OP-REPLACE origWidth 0 origWidth newHeight)
 		; paste bottom half on the right
 		(gimp-edit-paste lyr)
-		; merge layers
-		(gimp-image-merge-visible-layers img CLIP_TO_IMAGE)
-		; halve image height
-		(gimp-image-resize img newWidth newHeight 0 0)
-		(gimp-layer-resize-to-image-size (car (gimp-image-get-layers img)))
-		; set image to ration of a 4x6 photograph
-		(let* 
+		(let*
 			(
-				(heightWithBorder (/ newHeight (- 1 (/ borderSize (/ HEIGHT_INCHES 2)))))
-				(widthWithBorder (/ newWidth (- 1 (/ borderSize (/ WIDTH_INCHES 2)))))
+				; merge layers
+				(lyr-merge (car (gimp-image-merge-visible-layers img CLIP_TO_IMAGE)))
 			)
-		  	(let*
+			; halve image height
+			(gimp-image-resize img newWidth newHeight 0 0)
+			(gimp-layer-resize-to-image-size lyr-merge)
+			; set image to ratio of a 4x6 photograph
+			(let* 
 				(
-					(photoHeight (if (> (/ 4 6) (/ newHeight newWidth)) (* (/ 4 6) widthWithBorder) heightWithBorder ) )
-					(photoWidth (if (> (/ 4 6) (/ newHeight newWidth)) widthWithBorder (* (/ 6 4) heightWithBorder) ) )
+					(heightWithBorder (/ newHeight (- 1 (/ borderSize (/ HEIGHT_INCHES 2)))))
+					(widthWithBorder (/ newWidth (- 1 (/ borderSize (/ WIDTH_INCHES 2)))))
 				)
 				(let*
 					(
-						(centerHeight (/ (- photoHeight newHeight) 2))
-						(centerWidth (/ (- photoWidth newWidth) 2))
-						(lyr (car (gimp-image-get-layers img)))
-						(blankLyr (car (gimp-layer-new img photoWidth photoHeight 0 "" 100 0)))
+						(photoHeight (if (> (/ 4 6) (/ newHeight newWidth)) (* (/ 4 6) widthWithBorder) heightWithBorder ) )
+						(photoWidth (if (> (/ 4 6) (/ newHeight newWidth)) widthWithBorder (* (/ 6 4) heightWithBorder) ) )
 					)
-					(gimp-image-resize img photoWidth photoHeight 0 0)
-					; move layer to center
-					(if (> (/ 4 6) (/ newHeight newWidth))
-						(script-fu-move-layer-to img lyr centerWidth centerHeight)
-						(script-fu-move-layer-to img lyr centerWidth centerHeight)
+					(let*
+						(
+							(centerHeight (/ (- photoHeight newHeight) 2))
+							(centerWidth (/ (- photoWidth newWidth) 2))
+							;(lyr (car (gimp-image-get-layers img)))
+							(blankLyr (car (gimp-layer-new img "Background" photoWidth photoHeight 0 100 0)))
+						)
+						(gimp-image-resize img photoWidth photoHeight 0 0)
+						;
+						(display lyr-merge)
+						(display #\newline)
+						(display centerWidth)
+						(display #\newline)
+						(display centerHeight)
+						(display #\newline)
+						; move layer to center
+						(gimp-layer-set-offsets lyr-merge centerWidth centerHeight)
+						; color background image
+						(gimp-context-set-background backColor)
+						(gimp-drawable-fill blankLyr BACKGROUND_FILL)
+						; insert layer behind
+						(gimp-image-insert-layer img blankLyr 0 1)
+						; merge layers
+						(gimp-image-merge-visible-layers img CLIP_TO_IMAGE)
+						; the end
+						(gimp-displays-flush)
 					)
-					; color background image
-					(gimp-context-set-background backColor)
-					(gimp-drawable-fill blankLyr BACKGROUND_FILL)
-					; insert layer behind
-					(gimp-image-insert-layer img blankLyr 0 1)
-					; merge layers
-					(gimp-image-merge-visible-layers img CLIP_TO_IMAGE)
 				)
-		  	)
-	  	)
-		; the end
-		(gimp-displays-flush)
+			)
+		)
 	)
 )
 

@@ -7,12 +7,6 @@
             (img-stack (vector-ref stack-result 0) )
             (lyr-stack (vector-ref stack-result 1) )
         )
-        ;
-        (display (number? img-stack))
-        (display #\newline)
-        (display stack-result)
-        (display #\newline)
-        ;
         (stereo-photo img-stack lyr-stack "gray" 0.0625 )
     )
 )
