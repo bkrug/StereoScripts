@@ -5,10 +5,10 @@
          (img (car (gimp-file-load RUN-NONINTERACTIVE fnm-L fnm-L)))
          (layL (car (gimp-image-get-layers img)))
          (layR (car (gimp-file-load-layer RUN-NONINTERACTIVE img fnm-R)))
-		   (origHeight (car (gimp-image-get-height img)))
-		   (origWidth (car (gimp-image-get-width img)))
-		   (newHeight (* 2 origHeight))
-		   (CLIP_TO_IMAGE 1)
+         (origHeight (car (gimp-image-get-height img)))
+         (origWidth (car (gimp-image-get-width img)))
+         (newHeight (* 2 origHeight))
+         (CLIP_TO_IMAGE 1)
       )
 	   ; double image height
 	   (gimp-image-resize img origWidth newHeight 0 0)
@@ -41,7 +41,6 @@
                     ""
                     SF-FILENAME "fnm-L" ""
                     SF-FILENAME "fnm-R" ""
-                    ;SF-FILENAME "Output" "output.rcs.png"
 )
 
 (script-fu-menu-register "stack-images"

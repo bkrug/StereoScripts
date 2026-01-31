@@ -1,41 +1,48 @@
-(define (stereo-photo img lyr backColor borderSize)
-   (let* (
-		   (origHeight (car (gimp-image-get-height img)))
-		   (origWidth (car (gimp-image-get-width img)))
-		   (newHeight (/ origHeight 2))
-		   (newWidth (* 2 origWidth))
-		   (CLIP_TO_IMAGE 1)
-		   (FG_BUCKET_FILL 0)
-		   (BACKGROUND_FILL 1)
-		   (HEIGHT_INCHES 4)
-		   (WIDTH_INCHES 6)
-         )
-	  ; double image width
-	  (gimp-image-resize img newWidth origHeight 0 0)
-	  (gimp-layer-resize-to-image-size lyr)
-      ; select bottom half of image
-      (gimp-image-select-rectangle img CHANNEL-OP-ADD 0 newHeight origWidth newHeight)
-	  ; cut bottom half of image
-	  (gimp-edit-cut (vector lyr) )
-      ; select top right quarter of new image size
-      (gimp-image-select-rectangle img CHANNEL-OP-REPLACE origWidth 0 origWidth newHeight)
-	  ; paste bottom half on the right
-	  (gimp-edit-paste lyr)
-	  ; merge layers
-	  (gimp-image-merge-visible-layers img CLIP_TO_IMAGE)
-	  ; halve image height
-	  (gimp-image-resize img newWidth newHeight 0 0)
-	  (gimp-layer-resize-to-image-size (car (gimp-image-get-layers img)))
-	  ; set image to ration of a 4x6 photograph
-	  (let* (
+(define (stereo-photo img
+					  lyr
+					  backColor
+					  borderSize)
+   (let*
+   		(
+			(origHeight (car (gimp-image-get-height img)))
+			(origWidth (car (gimp-image-get-width img)))
+			(newHeight (/ origHeight 2))
+			(newWidth (* 2 origWidth))
+			(CLIP_TO_IMAGE 1)
+			(FG_BUCKET_FILL 0)
+			(BACKGROUND_FILL 1)
+			(HEIGHT_INCHES 4)
+			(WIDTH_INCHES 6)
+		)
+		; double image width
+		(gimp-image-resize img newWidth origHeight 0 0)
+		(gimp-layer-resize-to-image-size lyr)
+		; select bottom half of image
+		(gimp-image-select-rectangle img CHANNEL-OP-ADD 0 newHeight origWidth newHeight)
+		; cut bottom half of image
+		(gimp-edit-cut (vector lyr) )
+		; select top right quarter of new image size
+		(gimp-image-select-rectangle img CHANNEL-OP-REPLACE origWidth 0 origWidth newHeight)
+		; paste bottom half on the right
+		(gimp-edit-paste lyr)
+		; merge layers
+		(gimp-image-merge-visible-layers img CLIP_TO_IMAGE)
+		; halve image height
+		(gimp-image-resize img newWidth newHeight 0 0)
+		(gimp-layer-resize-to-image-size (car (gimp-image-get-layers img)))
+		; set image to ration of a 4x6 photograph
+		(let* 
+			(
 				(heightWithBorder (/ newHeight (- 1 (/ borderSize (/ HEIGHT_INCHES 2)))))
 				(widthWithBorder (/ newWidth (- 1 (/ borderSize (/ WIDTH_INCHES 2)))))
 			)
-		  (let* (
+		  	(let*
+				(
 					(photoHeight (if (> (/ 4 6) (/ newHeight newWidth)) (* (/ 4 6) widthWithBorder) heightWithBorder ) )
 					(photoWidth (if (> (/ 4 6) (/ newHeight newWidth)) widthWithBorder (* (/ 6 4) heightWithBorder) ) )
 				)
-				(let* (
+				(let*
+					(
 						(centerHeight (/ (- photoHeight newHeight) 2))
 						(centerWidth (/ (- photoWidth newWidth) 2))
 						(lyr (car (gimp-image-get-layers img)))
@@ -55,11 +62,11 @@
 					; merge layers
 					(gimp-image-merge-visible-layers img CLIP_TO_IMAGE)
 				)
-		  )
-	  )
-      ; the end
-      (gimp-displays-flush)
-   )
+		  	)
+	  	)
+		; the end
+		(gimp-displays-flush)
+	)
 )
 
 (script-fu-register "stereo-photo"
