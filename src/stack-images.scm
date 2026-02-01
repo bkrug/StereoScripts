@@ -3,7 +3,6 @@
    (let* 
       (
          (img (car (gimp-file-load RUN-NONINTERACTIVE fnmL fnmL)))
-         (lyrL (car (gimp-image-get-layers img)))
          (lyrR (car (gimp-file-load-layer RUN-NONINTERACTIVE img fnmR)))
          (origHeight (car (gimp-image-get-height img)))
          (origWidth (car (gimp-image-get-width img)))
@@ -38,8 +37,8 @@
                     "Benjamin Krug"
          			  "2026-01-31"
                     ""
-                    SF-FILENAME "fnmL" ""
-                    SF-FILENAME "fnmR" ""
+                    SF-FILENAME "Left Image" ""
+                    SF-FILENAME "Right Image" ""
 )
 
 (script-fu-menu-register "stack-images"
