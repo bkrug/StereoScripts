@@ -58,10 +58,6 @@
 					; Create a background layer to hold the border color
 					(blankLyr (car (gimp-layer-new img "Background" printedWidth printedHeight 0 100 0)))
 				)
-				(display horizontalResolution)
-				(display #\newline)
-				(display verticalResolution)
-				(display #\newline)
 				;
 				(gimp-image-resize img printedWidth printedHeight 0 0)
 				; center the content layer vertically and horizontally
