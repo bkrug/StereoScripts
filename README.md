@@ -1,10 +1,10 @@
 # Gimp Stereo Scripts
 
-Place the .scm files at a location like C:\program files\gimp 2\share\gimp\2.0\scripts
+To install, clone this repo.
+Add the "src" folder to Gimp's source of scripts through the following menu.
+`Edit -> Preferences -> Folders -> Scripts`
 
-Place the other files in the same directory as your .MPO pictures
-
-I did not create mposplit.exe
+I did not create mposplit.exe. It is a windows executable for splitting mpo files into two jpegs.
 
 ### Ideas to come back and make this work in Linux
 
