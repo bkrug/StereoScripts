@@ -1,3 +1,8 @@
+(define (write-line givenStr)
+    (display givenStr)
+    (display #\newline)
+)
+
 (define (display-files pathL pathR ext)
     (let*
         (
@@ -13,9 +18,10 @@
                         (string-append pathL normalizedExt)
                         (string-append pathL "/" normalizedExt)
                         ))
+            (filesL (car (file-glob searchL 0)))
         )
-        (display normalizedExt)
-        (display searchL)
-        ; (file-glob searchL 0)
+        (for-each write-line filesL)
     )
 )
+
+;(display-files "/home/bkrug/Cabinet/" "" "docx")
