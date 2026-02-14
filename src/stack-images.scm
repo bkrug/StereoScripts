@@ -32,7 +32,7 @@
 ; register the script?
 (script-fu-register "stack-images"
                     "Stack Images"
-                    "Stack one image at the top top half and one at the bottom half of the new image."
+                    "Stack left image as the top top half and right image as the bottom half of a new image."
                     ""
                     "Benjamin Krug"
          			  "2026-01-31"
