@@ -9,26 +9,6 @@
 	)
 )
 
-(define (analygraph-create-layers fnmL fnmR)
-	(let*
-		(
-			(img (car (gimp-file-load RUN-NONINTERACTIVE fnmL fnmL)))
-			(layerArray (car (gimp-image-get-layers img)))
-			(lyrL (vector-ref layerArray 0))
-			(lyrR (car (gimp-file-load-layer RUN-NONINTERACTIVE img fnmR)))
-		)
-		(gimp-image-insert-layer img lyrR 0 0)
-		; make one layer cyan
-		(gimp-drawable-colorize-hsl lyrR 180 100 -50)
-		; make one layer red
-		(gimp-drawable-colorize-hsl lyrL 0 100 -50)
-		;
-		(gimp-layer-set-opacity lyrR 50)
-		;
-		img
-	)
-)
-
 ; "folderL", "folderR", and "destFolder" must end with slashes
 (define (analygraph-save-image fnmL folderL folderR destFolder)
 	(let*
@@ -47,7 +27,7 @@
 	(let*
 		(
 			(errorMsg (analygraph-save-image (car filesL) folderL folderR dest))
-		)
+		) 
 		(if (> (length filesL) 1)
 			(analygraph-save-many-images (cdr filesL) folderL folderR dest)
 			(display "")
