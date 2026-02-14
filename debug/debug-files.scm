@@ -9,14 +9,13 @@
 	)
 )
 
-(define (analygraph-layers-create fnmL fnmR)
+(define (analygraph-create-layers fnmL fnmR)
 	(let*
 		(
 			(img (car (gimp-file-load RUN-NONINTERACTIVE fnmL fnmL)))
 			(layerArray (car (gimp-image-get-layers img)))
 			(lyrL (vector-ref layerArray 0))
 			(lyrR (car (gimp-file-load-layer RUN-NONINTERACTIVE img fnmR)))
-			(grey-saturation -100)
 		)
 		(gimp-image-insert-layer img lyrR 0 0)
 		; make one layer cyan
@@ -37,7 +36,7 @@
 			(filename (substring fnmL (string-length folderL)))
 			(fnmR (string-append folderR filename))
 			(destFile (string-append destFolder filename))
-			(img (analygraph-layers-create fnmL fnmR))
+			(img (analygraph-create-layers fnmL fnmR))
 		)
 		(gimp-image-flatten img)
 		(gimp-file-save RUN-NONINTERACTIVE img destFile)
