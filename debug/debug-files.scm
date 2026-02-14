@@ -1,3 +1,14 @@
+(define (normalize-folder-path givenPath)
+	(if
+		(equal?
+			(substring givenPath (- (string-length givenPath) 1))
+			"/"
+		)
+		givenPath
+		(string-append givenPath "/")
+	)
+)
+
 (define (analygraph-layers-create fnmL fnmR)
 	(let*
 		(
@@ -19,34 +30,42 @@
 	)
 )
 
-; destFolder must end with a slash
-(define (analygraph-save-image fnmL fnmR folderL destFolder)
+; "folderL", "folderR", and "destFolder" must end with slashes
+(define (analygraph-save-image fnmL fnmR folderL folderR destFolder)
 	(let*
 		(
-			(filename (substring fnmL (string-length folderL)))
-			(destFile (string-append destFolder filename))
+			(filenameL (substring fnmL (string-length folderL)))
+			(filenameR (substring fnmR (string-length folderR)))
+			(destFile (string-append destFolder filenameL))
 			(img (analygraph-layers-create fnmL fnmR))
 		)
-		;
-		(gimp-image-flatten img)
-		;
-		(gimp-file-save RUN-NONINTERACTIVE img destFile)
+		(if (equal? filenameL filenameR)
+			(begin
+				(gimp-image-flatten img)
+				(gimp-file-save RUN-NONINTERACTIVE img destFile)
+				""
+			)
+			(string-append "Files in the left and right path must match exactly. Found missmatch between these two: " filenameL " " filenameR)
+		)
 	)
 )
 
-; TODO: these are files lists, not strings.
-(define (analygraph-save-many-images str1 str2 folderL dest)
-	(if (= (length str1) 0)
-		(display "")
-		(analygraph-save-image (car str1) (car str2) folderL dest)
-	)
-	(if (= (length str1) 0)
-		#t
-		(analygraph-save-many-images (cdr str1) (cdr str2) folderL dest)
+(define (analygraph-save-many-images filesL filesR folderL folderR dest)
+	(let*
+		(
+			(errorMsg (analygraph-save-image (car filesL) (car filesR) folderL folderR dest))
+		)
+		(if (> (string-length errorMsg) 0)
+			errorMsg
+			(if (> (length filesL) 1)
+				(analygraph-save-many-images (cdr filesL) (cdr filesR) folderL folderR dest)
+				""
+			)
+		)
 	)
 )
 
-(define (display-files pathL pathR pathDest ext)
+(define (analygraph-mass-creation pathL pathR pathDest ext)
 	(let*
 		(
 			(normalizedExt 
@@ -54,42 +73,27 @@
 					(equal? (substring ext 0 1) ".")
 					(string-append "*" ext)
 					(string-append "*." ext)
-				))
-			(normalizedL
-				(if 
-					(equal?
-						(substring pathL (- (string-length pathL) 1))
-						"/"
-					)
-					pathL
-					(string-append pathL "/")
-				))
-			(normalizedR
-				(if 
-					(equal?
-						(substring pathR (- (string-length pathR) 1))
-						"/"
-					)
-					pathR
-					(string-append pathR "/")
-				))
-			(normalizedDest
-				(if 
-					(equal?
-						(substring pathDest (- (string-length pathDest) 1))
-						"/"
-					)
-					pathDest
-					(string-append pathDest "/")
-				))
+				)
+			)
+			(normalizedL (normalize-folder-path pathL))
+			(normalizedR (normalize-folder-path pathR))
+			(normalizedDest (normalize-folder-path pathDest))
 			(searchL (string-append pathL normalizedExt))
 			(searchR (string-append pathR normalizedExt))
 			(filesL (car (file-glob searchL 0)))
 			(filesR (car (file-glob searchR 0)))
+			(errorMsg
+				(if (= (length filesL) (length filesR))
+					(analygraph-save-many-images filesL filesR normalizedL normalizedR normalizedDest)
+					(string-append "Left folder and right folder contain different numbers of files of type: " normalizedExt)
+				)
+			)
 		)
-		(write-sep-line filesL filesR pathL normalizedDest)
+		(if (> (string-length errorMsg) 0)
+			(error errorMsg)
+			display ""
+		)
 	)
 )
 
-;(display-files "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left/" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Ana/" "jpg")
-;(make-analygraph "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left/P1110869.jpg" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/P1110869.jpg" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Ana/")
+;(analygraph-mass-creation "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left/" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Ana/" "jpg")
