@@ -35,10 +35,6 @@
 		;
 		(gimp-image-flatten img)
 		;
-		;(gimp-display-new img)
-		;
-		;(gimp-displays-flush)
-		;
 		(gimp-file-save RUN-NONINTERACTIVE img destFile)
 	)
 )
@@ -59,40 +55,44 @@
 	(let*
 		(
 			(normalizedExt 
-					(if 
-						(equal? (substring ext 0 1) ".")
-						(string-append "*" ext)
-						(string-append "*." ext)
-					))
-			(searchL (if 
-						(equal?
-							(substring pathL (- (string-length pathL) 1))
-							"/"
-						)
-						pathL
-						(string-append pathL "/")
-					))
-			(searchR (if 
-						(equal?
-							(substring pathR (- (string-length pathR) 1))
-							"/"
-						)
-						pathR
-						(string-append pathR "/")
-					))
+				(if 
+					(equal? (substring ext 0 1) ".")
+					(string-append "*" ext)
+					(string-append "*." ext)
+				))
+			(normalizedL
+				(if 
+					(equal?
+						(substring pathL (- (string-length pathL) 1))
+						"/"
+					)
+					pathL
+					(string-append pathL "/")
+				))
+			(normalizedR
+				(if 
+					(equal?
+						(substring pathR (- (string-length pathR) 1))
+						"/"
+					)
+					pathR
+					(string-append pathR "/")
+				))
 			(normalizedDest
-					(if 
-						(equal?
-							(substring pathDest (- (string-length pathDest) 1))
-							"/"
-						)
-						pathDest
-						(string-append pathDest "/")
-					))
-			(filesL (car (file-glob (string-append pathL normalizedExt) 0)))
-			(filesR (car (file-glob (string-append pathR normalizedExt) 0)))
+				(if 
+					(equal?
+						(substring pathDest (- (string-length pathDest) 1))
+						"/"
+					)
+					pathDest
+					(string-append pathDest "/")
+				))
+			(searchL (string-append pathL normalizedExt))
+			(searchR (string-append pathR normalizedExt))
+			(filesL (car (file-glob searchL 0)))
+			(filesR (car (file-glob searchR 0)))
 		)
-		(write-sep-line filesL filesR searchL normalizedDest)
+		(write-sep-line filesL filesR pathL normalizedDest)
 	)
 )
 
