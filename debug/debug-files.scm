@@ -3,6 +3,17 @@
 	(display #\newline)
 )
 
+(define (write-sep-line str1 str2)
+	(if (= (length str1) 0)
+		(display "")
+		(write-line (car str1))
+	)
+	(if (= (length str1) 0)
+		#t
+		(write-sep-line (cdr str1) (cdr str1))
+	)
+)
+
 (define (analygraph-layers-internal fnmL fnmR)
   (let*
     (
@@ -37,9 +48,20 @@
 									(string-append pathL normalizedExt)
 									(string-append pathL "/" normalizedExt)
 								))
+			(searchR (if 
+									(equal?
+										(substring pathR (- (string-length pathR) 1))
+										"/"
+									)
+									(string-append pathR normalizedExt)
+									(string-append pathR "/" normalizedExt)
+								))
 			(filesL (car (file-glob searchL 0)))
+			(filesR (car (file-glob searchR 0)))
 		)
-		(for-each write-line filesL)
+		;(for-each write-line filesL)
+		;(for-each write-line filesR)
+		(write-sep-line filesL filesR)
 	)
 )
 
