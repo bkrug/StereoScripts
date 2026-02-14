@@ -1,9 +1,4 @@
-(define (write-line givenStr)
-	(display givenStr)
-	(display #\newline)
-)
-
-(define (analygraph-layers-internal fnmL fnmR)
+(define (analygraph-layers-create fnmL fnmR)
 	(let*
 		(
 			(img (car (gimp-file-load RUN-NONINTERACTIVE fnmL fnmL)))
@@ -25,12 +20,12 @@
 )
 
 ; destFolder must end with a slash
-(define (make-analygraph fnmL fnmR folderL destFolder)
+(define (analygraph-save-image fnmL fnmR folderL destFolder)
 	(let*
 		(
 			(filename (substring fnmL (string-length folderL)))
 			(destFile (string-append destFolder filename))
-			(img (analygraph-layers-internal fnmL fnmR))
+			(img (analygraph-layers-create fnmL fnmR))
 		)
 		;
 		(gimp-image-flatten img)
@@ -40,14 +35,14 @@
 )
 
 ; TODO: these are files lists, not strings.
-(define (write-sep-line str1 str2 folderL dest)
+(define (analygraph-save-many-images str1 str2 folderL dest)
 	(if (= (length str1) 0)
 		(display "")
-		(make-analygraph (car str1) (car str2) folderL dest)
+		(analygraph-save-image (car str1) (car str2) folderL dest)
 	)
 	(if (= (length str1) 0)
 		#t
-		(write-sep-line (cdr str1) (cdr str2) folderL dest)
+		(analygraph-save-many-images (cdr str1) (cdr str2) folderL dest)
 	)
 )
 
