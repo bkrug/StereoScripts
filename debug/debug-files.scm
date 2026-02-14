@@ -3,17 +3,6 @@
 	(display #\newline)
 )
 
-(define (write-sep-line str1 str2)
-	(if (= (length str1) 0)
-		(display "")
-		(write-line (car str1))
-	)
-	(if (= (length str1) 0)
-		#t
-		(write-sep-line (cdr str1) (cdr str1))
-	)
-)
-
 (define (analygraph-layers-internal fnmL fnmR)
   (let*
     (
@@ -30,7 +19,34 @@
     (gimp-drawable-colorize-hsl lyrL 0 100 -50)
     ;
     (gimp-layer-set-opacity lyrR 50)
+		;
+		img
   )
+)
+
+(define (make-analygraph fnmL fnmR)
+	(let*
+		(
+			(img (analygraph-layers-internal fnmL fnmR))
+		)
+		(gimp-image-flatten img)
+		; display the image
+		(gimp-display-new img)
+		; the end
+		(gimp-displays-flush)
+		;(gimp-file-save RUN-NONINTERACTIVE img "/home/bkrug/test.jpg")		
+	)
+)
+
+(define (write-sep-line str1 str2)
+	(if (= (length str1) 0)
+		(display "")
+		(make-analygraph (car str1) (car str2))
+	)
+	(if (= (length str1) 0)
+		#t
+		(write-sep-line (cdr str1) (cdr str2))
+	)
 )
 
 (define (display-files pathL pathR ext)
@@ -66,3 +82,4 @@
 )
 
 ;(display-files "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left/" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/" "jpg")
+;(make-analygraph "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left/P1110869.jpg" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/P1110869.jpg")
