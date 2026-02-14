@@ -31,36 +31,27 @@
 )
 
 ; "folderL", "folderR", and "destFolder" must end with slashes
-(define (analygraph-save-image fnmL fnmR folderL folderR destFolder)
+(define (analygraph-save-image fnmL folderL folderR destFolder)
 	(let*
 		(
-			(filenameL (substring fnmL (string-length folderL)))
-			(filenameR (substring fnmR (string-length folderR)))
-			(destFile (string-append destFolder filenameL))
+			(filename (substring fnmL (string-length folderL)))
+			(fnmR (string-append folderR filename))
+			(destFile (string-append destFolder filename))
 			(img (analygraph-layers-create fnmL fnmR))
 		)
-		(if (equal? filenameL filenameR)
-			(begin
-				(gimp-image-flatten img)
-				(gimp-file-save RUN-NONINTERACTIVE img destFile)
-				""
-			)
-			(string-append "Files in the left and right path must match exactly. Found missmatch between these two: " filenameL " " filenameR)
-		)
+		(gimp-image-flatten img)
+		(gimp-file-save RUN-NONINTERACTIVE img destFile)
 	)
 )
 
-(define (analygraph-save-many-images filesL filesR folderL folderR dest)
+(define (analygraph-save-many-images filesL folderL folderR dest)
 	(let*
 		(
-			(errorMsg (analygraph-save-image (car filesL) (car filesR) folderL folderR dest))
+			(errorMsg (analygraph-save-image (car filesL) folderL folderR dest))
 		)
-		(if (> (string-length errorMsg) 0)
-			errorMsg
-			(if (> (length filesL) 1)
-				(analygraph-save-many-images (cdr filesL) (cdr filesR) folderL folderR dest)
-				""
-			)
+		(if (> (length filesL) 1)
+			(analygraph-save-many-images (cdr filesL) folderL folderR dest)
+			(display "")
 		)
 	)
 )
@@ -79,20 +70,9 @@
 			(normalizedR (normalize-folder-path pathR))
 			(normalizedDest (normalize-folder-path pathDest))
 			(searchL (string-append pathL normalizedExt))
-			(searchR (string-append pathR normalizedExt))
 			(filesL (car (file-glob searchL 0)))
-			(filesR (car (file-glob searchR 0)))
-			(errorMsg
-				(if (= (length filesL) (length filesR))
-					(analygraph-save-many-images filesL filesR normalizedL normalizedR normalizedDest)
-					(string-append "Left folder and right folder contain different numbers of files of type: " normalizedExt)
-				)
-			)
 		)
-		(if (> (string-length errorMsg) 0)
-			(error errorMsg)
-			display ""
-		)
+		(analygraph-save-many-images filesL normalizedL normalizedR normalizedDest)
 	)
 )
 
