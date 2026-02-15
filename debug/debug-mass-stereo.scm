@@ -10,7 +10,7 @@
 			(contentHeight (car (gimp-image-get-height img)))
 			(contentWidth (car (gimp-image-get-width img)))         
 			(HEIGHT_INCHES 4)
-			(WIDTH_INCHES 6)         
+			(WIDTH_INCHES 6)
 			; height and width in pixels before they are increased to match the desired aspect ratio
 			(heightWithBorder (/ contentHeight (- 1 (/ (* 2 borderSize) HEIGHT_INCHES ))))
 			(widthWithBorder (/ contentWidth (- 1 (/ (* 2 borderSize) WIDTH_INCHES ))))
@@ -54,18 +54,23 @@
 	)
 )
 
-(define (stereo-auto fnmL
-                     fnmR)
-	(let* 
+(define (stereo-auto
+					fnmL
+                    fnmR
+					backColor
+					borderSize)
+	(let*
 		(
 			(img (car (gimp-file-load RUN-NONINTERACTIVE fnmL fnmL)))
 			(layerArray (car (gimp-image-get-layers img)))
 			(lyrL (vector-ref layerArray 0))			
 			(lyrR (car (gimp-file-load-layer RUN-NONINTERACTIVE img fnmR)))
 			;
+			(HEIGHT_INCHES 4)
+			(WIDTH_INCHES 3)
 			(origHeight (car (gimp-image-get-height img)))
 			(origWidth (car (gimp-image-get-width img)))
-			(widthForEachEye (/ (* 3 origHeight) 4))
+			(widthForEachEye (/ (* WIDTH_INCHES origHeight) HEIGHT_INCHES))
 			(cutFromLeftWidth (/ (- origWidth widthForEachEye) -2))
 			(newWidth (* 2 widthForEachEye))
 		)
@@ -80,12 +85,12 @@
 		; resize image to a 4x6 ratio
 		(gimp-image-resize img newWidth origHeight 0 0)
 		(gimp-image-merge-visible-layers img CLIP-TO-IMAGE)
-		;
-		(add-border img "gray" 0.0625)
+		; add border
+		(add-border img backColor borderSize)
 		; display the image
 		(gimp-display-new img)
 		(gimp-displays-flush)
 	)
 )
 
-;(stereo-auto "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left/P1110869.jpg" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/P1110869.jpg")
+;(stereo-auto "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left/P1110869.jpg" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/P1110869.jpg" "gray" 0.0625)
