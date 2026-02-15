@@ -71,11 +71,13 @@
 			; Since there is a left-half and right-half,
 			; each half has an upper and lower border,
 			; but each half has only one border on either side.
+			; (Measured in inches)
 			(heightWithoutBorder (- HEIGHT_INCHES (* 2 borderSize)))
 			(widthWithoutBorder (- WIDTH_INCHES borderSize))
-			;
+			; dimensions in pixels
 			(origHeight (car (gimp-image-get-height img)))
 			(origWidth (car (gimp-image-get-width img)))
+			; get the target widths in pixels
 			(widthForEachEye (/ (* widthWithoutBorder origHeight) heightWithoutBorder))
 			(cutFromLeftWidth (/ (- origWidth widthForEachEye) -2))
 			(newWidth (* 2 widthForEachEye))
