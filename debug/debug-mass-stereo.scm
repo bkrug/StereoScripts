@@ -98,10 +98,41 @@
 		(gimp-image-merge-visible-layers img CLIP-TO-IMAGE)
 		; add border
 		(stereo-add-border img backColor borderSize)
+		; return value
+		img
+	)
+)
+
+(define (stereo-auto-display
+					fnmL
+					fnmR
+					backColor
+					borderSize)
+	(let*
+		(
+			(img (stereo-auto fnmL fnmR backColor borderSize))
+		)
 		; display the image
 		(gimp-display-new img)
 		(gimp-displays-flush)
 	)
 )
 
-;(stereo-auto "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left/P1110869.jpg" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/P1110869.jpg" "gray" 0.0625)
+(define (stereo-auto-save
+					fnmL
+					fnmR
+					fnmDest
+					backColor
+					borderSize)
+	(let*
+		(
+			(img (stereo-auto fnmL fnmR backColor borderSize))
+		)
+		; save the image
+		(gimp-image-flatten img)
+		(gimp-file-save RUN-NONINTERACTIVE img fnmDest)
+	)					
+)
+
+;(stereo-auto-display "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left/P1110869.jpg" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/P1110869.jpg" "gray" 0.0625)
+;(stereo-auto-save "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left/P1110869.jpg" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/P1110869.jpg" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/P1110869.jpg" "gray" 0.0625)
