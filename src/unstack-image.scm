@@ -97,8 +97,53 @@
 	)
 )
 
+(define (unstack-image-at-x
+					img
+					lyr
+					middleX
+					backColor
+					borderSize)
+	(let*
+		(
+			; desired height of each half of the image
+			(HEIGHT_INCHES 4)
+			(WIDTH_INCHES 3)
+			; Since there is a left-half and right-half,
+			; each half has an upper and lower border,
+			; but each half has only one border on either side.
+			; (Measured in inches)
+			(heightWithoutBorder (- HEIGHT_INCHES (* 2 borderSize)))
+			(widthWithoutBorder (- WIDTH_INCHES borderSize))
+			; dimensions in pixels
+			(origHeight (car (gimp-image-get-height img)))
+			(origWidth (car (gimp-image-get-width img)))
+			(heightOfOneFrame (/ origHeight 2))
+			; get the target widths in pixels
+			(widthForEachEye (/ (* widthWithoutBorder heightOfOneFrame) heightWithoutBorder))
+			(newWidth (* 2 widthForEachEye))
+			; given that middleX refers to the center of the portions that we will keep,
+			; calculate the left-most position of what we will keep
+			(leftmostPosition (- middleX (/ widthForEachEye 2)))
+			(cutFromLeftWidth
+				(cond
+					((< leftmostPosition 0)
+						0)
+					((> leftmostPosition (- origWidth widthForEachEye))
+						(- origWidth widthForEachEye))
+					(else
+						leftmostPosition)
+				)				
+			)
+		)
+		; cut to the portion we will keep
+		(gimp-image-crop img widthForEachEye origHeight cutFromLeftWidth 0)
+		; let the top half of what is left become the left half of what is left
+		(unstack-image img lyr backColor borderSize)
+	)
+)
+
 (script-fu-register "unstack-image"
-					"Unstack for Stereoscope"
+					"Unstack from Cropped Selection"
 					"Splits image into top and bottom halves, converting into left and right halves, and fits them onto into an image for printing a 4x6 photograph."
 					""
 					"Benjamin Krug"
@@ -109,8 +154,25 @@
 					SF-COLOR      _"Color"                  "gray"
 					SF-ADJUSTMENT _"Border Size in Inches"  '(0.0625 0 3 0.0125 0.0125 4 1)
 )
+
+(script-fu-register "unstack-image-at-x"
+					"Unstack at User-Defined Location"
+					"abcdefg"
+					""
+					"Benjamin Krug"
+					"2026-02-15"
+					""
+					SF-IMAGE      "The image"				0
+					SF-DRAWABLE   "The layer"				0
+					SF-ADJUSTMENT _"X Position"             '(0 0 1000000 25 100 0 1)
+					SF-COLOR      _"Color"                  "gray"
+					SF-ADJUSTMENT _"Border Size in Inches"  '(0.0625 0 3 0.0125 0.0125 4 1)
+)
 ;See values specified for SF-ADJUSTMENT here:
 ;https://docs.gimp.org/3.0/en/gimp-using-script-fu-tutorial-first-script.html
 
 (script-fu-menu-register "unstack-image"
+                         "<Image>/Stereo")
+
+(script-fu-menu-register "unstack-image-at-x"
                          "<Image>/Stereo")

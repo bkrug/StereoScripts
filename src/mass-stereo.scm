@@ -23,8 +23,8 @@
 			(origWidth (car (gimp-image-get-width img)))
 			; get the target widths in pixels
 			(widthForEachEye (/ (* widthWithoutBorder origHeight) heightWithoutBorder))
-			(cutFromLeftWidth (/ (- origWidth widthForEachEye) -2))
 			(newWidth (* 2 widthForEachEye))
+			(cutFromLeftWidth (/ (- origWidth widthForEachEye) -2))
 		)
 		; insert the right-eye layer
 		(gimp-image-insert-layer img lyrR 0 0)
