@@ -68,9 +68,15 @@
 			;
 			(HEIGHT_INCHES 4)
 			(WIDTH_INCHES 3)
+			; Since there is a left-half and right-half,
+			; each half has an upper and lower border,
+			; but each half has only one border on either side.
+			(heightWithoutBorder (- HEIGHT_INCHES (* 2 borderSize)))
+			(widthWithoutBorder (- WIDTH_INCHES borderSize))
+			;
 			(origHeight (car (gimp-image-get-height img)))
 			(origWidth (car (gimp-image-get-width img)))
-			(widthForEachEye (/ (* WIDTH_INCHES origHeight) HEIGHT_INCHES))
+			(widthForEachEye (/ (* widthWithoutBorder origHeight) heightWithoutBorder))
 			(cutFromLeftWidth (/ (- origWidth widthForEachEye) -2))
 			(newWidth (* 2 widthForEachEye))
 		)
