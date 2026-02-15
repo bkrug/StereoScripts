@@ -28,28 +28,6 @@
 	)
 )
 
-(define (normalize-folder-path givenPath)
-	(if
-		(equal?
-			(substring givenPath (- (string-length givenPath) 1))
-			"/"
-		)
-		givenPath
-		(string-append givenPath "/")
-	)
-)
-
-(define (normalize-extension ext)
-  (cond
-    ((equal? (substring ext 0 2) "*.")
-      givenExt)
-    ((equal? (substring ext 0 1) ".")
-      (string-append "*" ext))
-    (else
-      (string-append "*." ext))
-  )
-)
-
 ; "folderL", "folderR", and "destFolder" must end with slashes
 (define (analygraph-save-image fnmL folderL folderR destFolder)
 	(let*
@@ -86,7 +64,7 @@
 			(searchL (string-append normalizedL normalizedExt))
 			(filesL (car (file-glob searchL 0)))
 		)
-    (gimp-message searchL)
+    	(gimp-message searchL)
 		(analygraph-save-many-images filesL normalizedL normalizedR normalizedDest)
 	)
 )

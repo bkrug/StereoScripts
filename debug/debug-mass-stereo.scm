@@ -75,5 +75,38 @@
 	)					
 )
 
+; "folderL", "folderR", and "folderDest" must end with slashes
+(define (stereo-save-many-images filesL folderL folderR folderDest backColor borderSize)
+	(let*
+		(
+			(fnmL (car filesL))
+			(filename (substring fnmL (string-length folderL)))
+			(fnmR (string-append folderR filename))
+			(fnmDest (string-append folderDest filename))
+		)
+		(stereo-auto-save fnmL fnmR fnmDest backColor borderSize)
+		(if (> (length filesL) 1)
+			(stereo-save-many-images (cdr filesL) folderL folderR folderDest backColor borderSize)
+			(display "")
+		)
+	)
+)
+
+(define (stereo-mass-creation pathL pathR pathDest ext backColor borderSize)
+	(let*
+		(
+			(normalizedL (normalize-folder-path pathL))
+			(normalizedR (normalize-folder-path pathR))
+			(normalizedDest (normalize-folder-path pathDest))
+			(normalizedExt (normalize-extension ext))
+			(searchL (string-append normalizedL normalizedExt))
+			(filesL (car (file-glob searchL 0)))
+		)
+    	(gimp-message searchL) ; TODO: Do we need this?
+		(stereo-save-many-images filesL normalizedL normalizedR normalizedDest backColor borderSize)
+	)
+)
+
 ;(stereo-auto-display "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left/P1110869.jpg" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/P1110869.jpg" "gray" 0.0625)
 ;(stereo-auto-save "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left/P1110869.jpg" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/P1110869.jpg" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/P1110869.jpg" "gray" 0.0625)
+;(stereo-mass-creation "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Left" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Right/" "/home/bkrug/Pictures/Photos/Switch 2 Unboxing/3D/Card" "jpg" "gray" 0.0625)
