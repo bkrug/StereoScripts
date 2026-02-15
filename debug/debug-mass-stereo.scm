@@ -1,7 +1,10 @@
-(define (add-border img
-					backColor
-					borderSize)
-	; set image to ratio of a 4x6 photograph
+; Add enough of a border such that the image has a 4x6 ratio.
+; Thus the borderSize is the minimum size.
+; Set the resolution so that the photograph is 4 inches by 6 inches.
+(define (stereo-add-border
+							img
+							backColor
+							borderSize)
 	(let* 
 		(
 			(layerArray (car (gimp-image-get-layers img)))
@@ -94,7 +97,7 @@
 		(gimp-image-resize img newWidth origHeight 0 0)
 		(gimp-image-merge-visible-layers img CLIP-TO-IMAGE)
 		; add border
-		(add-border img backColor borderSize)
+		(stereo-add-border img backColor borderSize)
 		; display the image
 		(gimp-display-new img)
 		(gimp-displays-flush)
