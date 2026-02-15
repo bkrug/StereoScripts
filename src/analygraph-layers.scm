@@ -64,13 +64,12 @@
 			(searchL (string-append normalizedL normalizedExt))
 			(filesL (car (file-glob searchL 0)))
 		)
-    	(gimp-message searchL)
 		(analygraph-save-many-images filesL normalizedL normalizedR normalizedDest)
 	)
 )
 
 (script-fu-register "analygraph-display-layers"
-					"Load Analygraph Layers"
+					"Display Analygraph Layers"
 					"Loads two photos as separate layers tinted cyan and red"
 					""
 					"Benjamin Krug"
@@ -90,7 +89,7 @@
           SF-DIRNAME "Left Folder" ""
           SF-DIRNAME "Right Folder" ""
           SF-DIRNAME "Destination Folder" ""
-          SF-STRING "Extension" ""
+          SF-STRING  "Extension" "jpg"
 )
 
 (script-fu-menu-register "analygraph-display-layers"
