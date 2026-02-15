@@ -61,7 +61,9 @@
 					   lyr
 					   backColor
 					   borderSize)
-   (let*
+	(gimp-image-undo-enable img)
+	(gimp-image-undo-group-start img)
+	(let*
    		(
 			(origHeight (car (gimp-image-get-height img)))
 			(origWidth (car (gimp-image-get-width img)))
@@ -95,6 +97,7 @@
 			(gimp-displays-flush)
 		)
 	)
+	(gimp-image-undo-group-end img)
 )
 
 (define (unstack-image-at-x
