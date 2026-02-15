@@ -1,3 +1,62 @@
+; Add enough of a border such that the image has a 4x6 ratio.
+; Thus the borderSize is the minimum size.
+; Set the resolution so that the photograph is 4 inches by 6 inches.
+(define (stereo-add-border
+							img
+							backColor
+							borderSize)
+	(let*
+		(
+			(layerArray (car (gimp-image-get-layers img)))
+			(lyrContent (vector-ref layerArray 0))
+			;
+			(contentHeight (car (gimp-image-get-height img)))
+			(contentWidth (car (gimp-image-get-width img)))         
+			(HEIGHT_INCHES 4)
+			(WIDTH_INCHES 6)
+			; height and width in pixels before they are increased to match the desired aspect ratio
+			(heightWithBorder (/ contentHeight (- 1 (/ (* 2 borderSize) HEIGHT_INCHES ))))
+			(widthWithBorder (/ contentWidth (- 1 (/ (* 2 borderSize) WIDTH_INCHES ))))
+			; height and width in pixels after increasing them to match the desired aspect ratio
+			(printedHeight
+				(if
+					(> (/ HEIGHT_INCHES WIDTH_INCHES) (/ contentHeight contentWidth))
+					(* (/ HEIGHT_INCHES WIDTH_INCHES) widthWithBorder)
+					heightWithBorder 
+				)
+			)
+			(printedWidth
+				(if
+					(> (/ HEIGHT_INCHES WIDTH_INCHES) (/ contentHeight contentWidth))
+					widthWithBorder
+					(* (/ WIDTH_INCHES HEIGHT_INCHES) heightWithBorder)
+				)
+			)
+			; offsets to move the content to
+			(contentTopOffset (/ (- printedHeight contentHeight) 2))
+			(contentLeftOffset (/ (- printedWidth contentWidth) 2))
+			; calculate the desired dots per inch
+			(verticalResolution (/ printedHeight HEIGHT_INCHES))
+			(horizontalResolution (/ printedWidth WIDTH_INCHES))
+			; Create a background layer to hold the border color
+			(blankLyr (car (gimp-layer-new img "Background" printedWidth printedHeight 0 100 0)))
+		)
+		;
+		(gimp-image-resize img printedWidth printedHeight 0 0)
+		; center the content layer vertically and horizontally
+		(gimp-layer-set-offsets lyrContent contentLeftOffset contentTopOffset)
+		; color background image
+		(gimp-context-set-background backColor)
+		(gimp-drawable-fill blankLyr FILL-BACKGROUND)
+		; insert layer behind
+		(gimp-image-insert-layer img blankLyr 0 1)
+		; merge layers
+		(gimp-image-merge-visible-layers img CLIP-TO-IMAGE)
+		; set resolution so that the image makes sense in inches
+		(gimp-image-set-resolution img horizontalResolution verticalResolution)
+	)
+)
+
 (define (unstack-image img
 					   lyr
 					   backColor
@@ -30,50 +89,10 @@
 			; halve image height
 			(gimp-image-resize img contentWidth contentHeight 0 0)
 			(gimp-layer-resize-to-image-size lyrMerge)
-			; set image to ratio of a 4x6 photograph
-			(let* 
-				(
-					; height and width in pixels before they are increased to match the desired aspect ratio
-					(heightWithBorder (/ contentHeight (- 1 (/ (* 2 borderSize) HEIGHT_INCHES ))))
-					(widthWithBorder (/ contentWidth (- 1 (/ (* 2 borderSize) WIDTH_INCHES ))))
-					; height and width in pixels after increasing them to match the desired aspect ratio
-					(printedHeight
-						(if (> (/ HEIGHT_INCHES WIDTH_INCHES) (/ contentHeight contentWidth))
-							(* (/ HEIGHT_INCHES WIDTH_INCHES) widthWithBorder)
-							heightWithBorder 
-						)
-					)
-					(printedWidth
-						(if (> (/ HEIGHT_INCHES WIDTH_INCHES) (/ contentHeight contentWidth))
-							widthWithBorder
-							(* (/ WIDTH_INCHES HEIGHT_INCHES) heightWithBorder)
-						)
-					)
-					; offsets to move the content to
-					(contentTopOffset (/ (- printedHeight contentHeight) 2))
-					(contentLeftOffset (/ (- printedWidth contentWidth) 2))
-					; calculate the desired dots per inch
-					(verticalResolution (/ printedHeight HEIGHT_INCHES))
-					(horizontalResolution (/ printedWidth WIDTH_INCHES))
-					; Create a background layer to hold the border color
-					(blankLyr (car (gimp-layer-new img "Background" printedWidth printedHeight 0 100 0)))
-				)
-				;
-				(gimp-image-resize img printedWidth printedHeight 0 0)
-				; center the content layer vertically and horizontally
-				(gimp-layer-set-offsets lyrMerge contentLeftOffset contentTopOffset)
-				; color background image
-				(gimp-context-set-background backColor)
-				(gimp-drawable-fill blankLyr FILL-BACKGROUND)
-				; insert layer behind
-				(gimp-image-insert-layer img blankLyr 0 1)
-				; merge layers
-				(gimp-image-merge-visible-layers img CLIP-TO-IMAGE)
-				; set resolution so that the image makes sense in inches
-				(gimp-image-set-resolution img horizontalResolution verticalResolution)
-				; the end
-				(gimp-displays-flush)
-			)
+			;
+			(stereo-add-border img backColor borderSize)
+			; the end
+			(gimp-displays-flush)
 		)
 	)
 )
