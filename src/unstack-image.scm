@@ -109,6 +109,8 @@
 					SF-COLOR      _"Color"                  "gray"
 					SF-ADJUSTMENT _"Border Size in Inches"  '(0.0625 0 3 0.0125 0.0125 4 1)
 )
+;See values specified for SF-ADJUSTMENT here:
+;https://docs.gimp.org/3.0/en/gimp-using-script-fu-tutorial-first-script.html
 
 (script-fu-menu-register "unstack-image"
                          "<Image>/Stereo")
