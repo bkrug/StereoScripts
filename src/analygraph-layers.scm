@@ -23,32 +23,33 @@
 		(
 			(img (analygraph-create-layers fnmL fnmR))
 		)
-    (gimp-display-new img)
-    (gimp-displays-flush)
+		(gimp-display-new img)
+		(gimp-displays-flush)
 	)
 )
 
 ; "folderL", "folderR", and "destFolder" must end with slashes
-(define (analygraph-save-image fnmL folderL folderR destFolder)
+(define (analygraph-save-image fnmL fnmR fnmDest)
 	(let*
 		(
-			(filename (substring fnmL (string-length folderL)))
-			(fnmR (string-append folderR filename))
-			(destFile (string-append destFolder filename))
 			(img (analygraph-create-layers fnmL fnmR))
-		)
+		)		
 		(gimp-image-flatten img)
-		(gimp-file-save RUN-NONINTERACTIVE img destFile)
+		(gimp-file-save RUN-NONINTERACTIVE img fnmDest)
 	)
 )
 
-(define (analygraph-save-many-images filesL folderL folderR dest)
+(define (analygraph-save-many-images filesL folderL folderR folderDest)
 	(let*
 		(
-			(errorMsg (analygraph-save-image (car filesL) folderL folderR dest))
-		) 
+			(fnmL (car filesL))
+			(filename (substring fnmL (string-length folderL)))
+			(fnmR (string-append folderR filename))
+			(fnmDest (string-append folderDest filename))
+		)
+		(analygraph-save-image fnmL fnmR fnmDest)
 		(if (> (length filesL) 1)
-			(analygraph-save-many-images (cdr filesL) folderL folderR dest)
+			(analygraph-save-many-images (cdr filesL) folderL folderR folderDest)
 			(display "")
 		)
 	)
