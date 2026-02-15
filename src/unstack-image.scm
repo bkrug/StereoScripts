@@ -107,7 +107,7 @@
 					SF-IMAGE      "The image"				0
 					SF-DRAWABLE   "The layer"				0
 					SF-COLOR      _"Color"                  "gray"
-					SF-ADJUSTMENT _"Border Size in Inches"  '(0.0625 0 3 0.0625 5 4 0)
+					SF-ADJUSTMENT _"Border Size in Inches"  '(0.0625 0 3 0.0125 0.0125 4 1)
 )
 
 (script-fu-menu-register "unstack-image"

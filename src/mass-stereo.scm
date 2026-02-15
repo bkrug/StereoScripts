@@ -116,7 +116,7 @@
         SF-FILENAME "Left Image" ""
         SF-FILENAME "Right Image" ""
 		SF-COLOR      _"Color"                  "gray"
-		SF-ADJUSTMENT _"Border Size in Inches"  '(0.0625 0 3 0.0625 5 4 0)		  
+		SF-ADJUSTMENT _"Border Size in Inches"  '(0.0625 0 3 0.0125 0.0125 4 1)		  
 )
 
 (script-fu-register "stereo-mass-creation"
@@ -131,7 +131,7 @@
 		SF-DIRNAME "Destination Folder" ""
 		SF-STRING  "Extension" "jpg"
 		SF-COLOR      _"Color"                  "gray"
-		SF-ADJUSTMENT _"Border Size in Inches"  '(0.0625 0 3 0.0625 5 4 0)		  
+		SF-ADJUSTMENT _"Border Size in Inches"  '(0.0625 0 3 0.0125 0.0125 4 1)		  
 )
 
 (script-fu-menu-register "stereo-auto-display"
