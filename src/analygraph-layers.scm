@@ -25,6 +25,8 @@
 		)
 		(gimp-display-new img)
 		(gimp-displays-flush)
+		;
+		(gimp-image-undo-enable img)
 	)
 )
 
