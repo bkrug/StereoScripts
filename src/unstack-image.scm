@@ -103,7 +103,8 @@
 					   backColor
 					   borderSize)
 	(gimp-image-undo-group-start img)
-	;
+	; Must clear any previous image selection that was made,
+	; such a selection will malform the transformations done in this method.
 	(gimp-selection-none img)
 	(unstack-image-common img lyr backColor borderSize)
 	;
@@ -116,7 +117,9 @@
 					middleX
 					backColor
 					borderSize)
-	(gimp-image-undo-group-start img)					
+	(gimp-image-undo-group-start img)
+	; Must clear any previous image selection that was made,
+	; such a selection will malform the transformations done in this method.
 	(gimp-selection-none img)
 	(let*
 		(
