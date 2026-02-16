@@ -8,7 +8,9 @@ Add the "src" folder to Gimp's source of scripts through the following menu.
 
 ### Windows
 
-I did not create mposplit.exe. It is a windows executable for splitting mpo files into two jpegs.
+I did not create mposplit.exe, but it is included in this repo.
+It is a windows executable for splitting mpo files into two jpegs.
+You can get an idea of how to use it by looking at the *.bat scripts in the obsolete folder.
 
 ### Linux
 
@@ -27,11 +29,37 @@ The result will be two lists of files with identical names and slightly differen
 The scripts within this repo create a new "Stereo" menu in the GIMP menubar.
 Below are the tools that exist within that menu.
 
+### Create Analgraph Images in Mass
+
+Allows a user to create a series of analygraph images from one folder containing left-eye images and another folder containing right-eye images.
+The two folders are required to contain lists of files with identical names.
+If source images come from .MPO files, the attached "/batch/mpo-split.sh" shell script will create such a folder structure for you.
+
+Since the resulting images are saved directly to a user-specified destination folder,
+the images are not auto-displayed in GIMP.
+
+### Create Stereo Cards in Mass
+
+Allows a user to create a series of stereosopic images meant to be viewed through a stereo viewer.
+From one folder containing left-eye images and another folder containing right-eye images.
+The two folders are required to contain lists of files with identical names.
+If source images come from .MPO files, the attached "/batch/mpo-split.sh" shell script will create such a folder structure for you.
+
+The resulting stereoscopic images are meant to be printed on a 6-inch wide x 4-inch tall medium.
+Thus, the image for each eye will have an aspect ratio of about 3 x 4.
+If your source images are wider than 3 x 4, then the tool automatically crops out the edges.
+Only the middle 3 inches of width will remain.
+If your source images are narrower than 3 x 4, then the tool does not crop anything and fills in the extra space with a border color.
+
+Since the resulting images are saved directly to a user-specified destination folder,
+the images are not auto-displayed in GIMP.
+
 ### Display Analygraph Layers
 
 Allows the user to select a left image and a right image, and generates an analygraph image from the two.
-The image is created as two GIMP layers.
-If necessary, you can shift or rotate one of the layers so that the red and cyan layers match up better.
+The image is displayed in the GIMP application as two image layers, one red and one cyan,
+and the user must manually export the result to a destination file.
+If necessary, you can shift or rotate one of the layers so that the two of them match up better.
 
 Use this option if the "mass" operation produces inadequate results for a few pictures,
 or if your source left and right images do not have identical names.
@@ -40,33 +68,13 @@ or if your source left and right images do not have identical names.
 
 Allows the user to select a left image and a right image, and generates an image to be viewed through a stereocope.
 The result is a picture that would be 6 inches wide and 4 inches tall if printed.
-When using this tool, a substantial amount of horizontal space is automatically cropped,
-retaining only the middle 3 inches for the original left and right image.
+If your source images are wider than a 3 x 4 aspect ratio, then they are edited using the approach of the "Create Stereo Cards in Mass" tool.
+
+The image is displayed in the GIMP application,
+and the user must manually export the result to a destination file.
 
 This tool should always have the same results as the "mass" operation,
 so use it only when your source left and right images do not have identical names.
-
-### Create Analgraph Images in Mass
-
-Similar to "Display Analygraph Layers", but allows the user to select
-a folder filled with left-eye images,
-a folder filled with right-eye images,
-and a destination folder.
-The left and right folders must have lists of files with identical names.
-
-Since the resulting images are saved directly to the destination folder,
-the images are not auto-displayed in GIMP.
-
-### Create Stereo Cards in Mass
-
-Similar to "Display Stereo Card", but allows the user to select
-a folder filled with left-eye images,
-a folder filled with right-eye images,
-and a destination folder.
-The left and right folders must have lists of files with identical names.
-
-Since the resulting images are saved directly to the destination folder,
-the images are not auto-displayed in GIMP.
 
 ### Stack Images
 
