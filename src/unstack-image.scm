@@ -57,12 +57,11 @@
 	)
 )
 
-(define (unstack-image img
-					   lyr
-					   backColor
-					   borderSize)
-	(gimp-image-undo-enable img)
-	(gimp-image-undo-group-start img)
+(define (unstack-image-common
+							img
+							lyr
+							backColor
+							borderSize)
 	(let*
    		(
 			(origHeight (car (gimp-image-get-height img)))
@@ -97,6 +96,16 @@
 			(gimp-displays-flush)
 		)
 	)
+)
+
+(define (unstack-image img
+					   lyr
+					   backColor
+					   borderSize)
+	(gimp-image-undo-group-start img)
+	;
+	(unstack-image-common img lyr backColor borderSize)
+	;
 	(gimp-image-undo-group-end img)
 )
 
@@ -106,6 +115,7 @@
 					middleX
 					backColor
 					borderSize)
+	(gimp-image-undo-group-start img)					
 	(let*
 		(
 			; desired height of each half of the image
@@ -143,6 +153,7 @@
 		; let the top half of what is left become the left half of what is left
 		(unstack-image img lyr backColor borderSize)
 	)
+	(gimp-image-undo-group-end img)
 )
 
 (script-fu-register "unstack-image"

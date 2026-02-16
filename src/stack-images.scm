@@ -8,8 +8,6 @@
          (origWidth (car (gimp-image-get-width img)))
          (newHeight (* 2 origHeight))
       )
-      (gimp-image-undo-enable img)
-      (gimp-image-undo-group-start img)
 	   ; double image height
 	   (gimp-image-resize img origWidth newHeight 0 0)
       ; insert the right-eye layer
@@ -28,7 +26,7 @@
          ; return
          (vector img layMerge)         
       )
-      (gimp-image-undo-group-end img)
+      (gimp-image-undo-enable img)
    )
 )
 
