@@ -40,8 +40,8 @@ the images are not auto-displayed in GIMP.
 
 ### Create Stereo Cards in Mass
 
-Allows a user to create a series of stereosopic images meant to be viewed through a stereo viewer.
-From one folder containing left-eye images and another folder containing right-eye images.
+Allows a user to create a series of stereosopic images, meant to be viewed through a stereo viewer,
+from one folder containing left-eye images and another folder containing right-eye images.
 The two folders are required to contain lists of files with identical names.
 If source images come from .MPO files, the attached "/batch/mpo-split.sh" shell script will create such a folder structure for you.
 
