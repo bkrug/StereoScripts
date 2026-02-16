@@ -104,6 +104,7 @@
 					   borderSize)
 	(gimp-image-undo-group-start img)
 	;
+	(gimp-selection-none img)
 	(unstack-image-common img lyr backColor borderSize)
 	;
 	(gimp-image-undo-group-end img)
@@ -116,6 +117,7 @@
 					backColor
 					borderSize)
 	(gimp-image-undo-group-start img)					
+	(gimp-selection-none img)
 	(let*
 		(
 			; desired height of each half of the image
