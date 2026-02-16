@@ -87,7 +87,7 @@ After using this tool, it must be followed by either of the "unstack" tools.
 
 After the user uses "Stack Images",
 the user is expected to manually crop the left and right images to the portions that they wish to retain.
-This toll can then be used to realign the original images to be side-by-side and viewable through a stereoscope.
+This "unstack" tool can then be used to realign the original images to be side-by-side and viewable through a stereoscope.
 The resulting image will be printable as a 6 inch by 4 inch picture,
 but the individual left and right halves do not need to perfectly fill a 3 inch by 4 inch space.
 The user can select a border color to fill in any extra space.
