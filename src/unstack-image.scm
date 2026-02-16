@@ -150,7 +150,7 @@
 					"Splits image into top and bottom halves, converting into left and right halves, and fits them onto into an image for printing a 4x6 photograph."
 					""
 					"Benjamin Krug"
-					"2026-01-31"
+					"2026-02-15"
 					""
 					SF-IMAGE      "The image"				0
 					SF-DRAWABLE   "The layer"				0
@@ -159,8 +159,8 @@
 )
 
 (script-fu-register "unstack-image-at-x"
-					"Unstack at User-Defined Location"
-					"abcdefg"
+					"Unstack from User-Defined Location"
+					"Unstack such that a user-selected x-coordinate represents the middle of the new image."
 					""
 					"Benjamin Krug"
 					"2026-02-15"
