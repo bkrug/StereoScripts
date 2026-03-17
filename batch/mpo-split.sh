@@ -22,9 +22,13 @@ do
     echo " splitting " $img;
     
     # create temporary left and right images
-    exiftool -trailer:all= $img -o "./Left/"$imgName".jpg"
-    exiftool $img -mpimage2 -b > $imgName".jpg"
-    mv $imgName".jpg" $RIGHT_DIR
+    leftImgName="./Left/"$imgName".jpg"
+    echo $leftImgName
+    exiftool -trailer:all= $img -o $leftImgName
+    if [ -f "$leftImgName" ]; then
+        exiftool $img -mpimage2 -b > $imgName".jpg"
+        mv $imgName".jpg" $RIGHT_DIR
+    fi
 done
 
 
